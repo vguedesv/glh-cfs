@@ -24,8 +24,6 @@ exports.initSearch = async (req, res) => {
     active: true
   })
   const filhosPossiveis = await admin.firestore().collection('filhos').get()
-  console.log(filhosPossiveis)
-  console.log('oi')
   
   filhosPossiveis.forEach(async (doc)=>{
     var childCompatibility = 0
@@ -110,7 +108,7 @@ exports.initSearch = async (req, res) => {
     }
 
     if ( paiSelecionado.idade_min <= tmpFilhoObject.idade <= paiSelecionado.idade_max){
-      childCompatibility += 40
+      childCompatibility += 30
       console.log('match idade perfeita, total:', childCompatibility)
     }else if (tmpFilhoObject.idade < paiSelecionado.idade_min) {
       var ans = 100 - ((paiSelecionado.idade_min - tmpFilhoObject.idade)*5)
@@ -122,7 +120,8 @@ exports.initSearch = async (req, res) => {
       console.log('match idade caso 2, total:', childCompatibility)
     }
 
-    await admin.firestore().collection('pai_filho').add({
+    const uniqueID = paiSelecionado.numProcesso + tmpFilhoObject.id
+    await admin.firestore().collection('pai_filho').doc(uniqueID).set({
       percentual: childCompatibility,
       pai_numProcesso: paiSelecionado.numProcesso,
       filho_id: tmpFilhoObject.id
