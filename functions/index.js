@@ -120,8 +120,7 @@ exports.initSearch = async (req, res) => {
       console.log('match idade caso 2, total:', childCompatibility)
     }
 
-    const uniqueID = paiSelecionado.numProcesso + tmpFilhoObject.id
-    await admin.firestore().collection('pai_filho').doc(uniqueID).set({
+    await admin.firestore().collection('pai_filho').add({
       percentual: childCompatibility,
       pai_numProcesso: paiSelecionado.numProcesso,
       filho_id: tmpFilhoObject.id
@@ -131,14 +130,21 @@ exports.initSearch = async (req, res) => {
       tmpColor = 'green'
     }
 
+   await sleep()
+
     await admin.firestore().collection('filhos').doc(tmpFilhoObject.id).update({
       active: false,
-      color: tmpColor
+      color: tmpColor,
+      percentual: childCompatibility
 
     })
     
 
     res.send(200)
   })
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
 }

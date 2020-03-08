@@ -169,7 +169,8 @@ const createFilho = async () => {
 
     sexo = 'feminino'
   }
-
+  var vara = ["1ª Vara da Infância e Juventude da Comarca de Recife", "1ª Vara de Família, da Infância, da Juventude e do Idoso da Comarca de Angra dos Reis", "1ª Vara da Infância e da Juventude e Adoção da Comarca de Curitiba", "Vara da Infância e da Juventude do Distrito Federal", "1ª Vara da Infância e Juventude de Vitória"]
+  var selectedVara = faker.random.arrayElement(vara)
   var response = await admin.firestore().collection('filhos').add({
     creation_timestamp: admin.firestore.FieldValue.serverTimestamp(),
     nome_criança: faker.name.findName(),
@@ -184,13 +185,16 @@ const createFilho = async () => {
     deficiencia_mental: deficiencia_mental,
     sexo: sexo,   
     color: 'transparent',
-    active: 'false'
+    active: 'false',
+    id_filho: faker.random.number(),
+    vara: selectedVara
+
   })
   console.log(response)
  
 }
 (async function main () {
-  for (let i = 0;  i < 1000; i++){
+  for (let i = 0;  i < 20; i++){
 
     console.log(`criando filho ${i}`)
     await createFilho()
